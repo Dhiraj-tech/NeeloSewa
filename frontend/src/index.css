@@ -1,0 +1,180 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f0f2f5;
+    line-height: 1.6;
+}
+
+.solid-blue-bg-header {
+    background-color: #007bff;
+}
+
+.hero-background-image {
+    background-image: url('/img.png'); /* Ensure you have an img.png in your /public folder or adjust path */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 600px;
+    position: relative;
+    z-index: 0;
+}
+
+.hero-background-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+
+.ai-chat-message.user {
+    background-color: #007bff;
+    color: #FFFFFF;
+    align-self: flex-end;
+    margin-left: auto;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+.ai-chat-message.ai {
+    background-color: #e2e6ea;
+    color: #212529;
+    align-self: flex-start;
+    margin-right: auto;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+.mobile-menu {
+    transition: max-height 0.3s ease-out;
+    max-height: 0;
+    overflow: hidden;
+}
+.mobile-menu.open {
+    max-height: 500px;
+}
+.card-hover-effect {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.card-hover-effect:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+.search-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
+}
+.nav-link.active {
+    font-weight: 700;
+    color: #ffffff;
+    border-bottom: 3px solid #ffc107;
+    padding-bottom: 6px;
+    transition: border-bottom 0.2s ease-in-out;
+}
+.btn-primary {
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+.btn-secondary {
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+.btn-secondary:hover {
+    transform: translateY(-2px);
+}
+.text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.custom-modal {
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: opacity 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+.custom-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+.custom-modal-content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    transform: translateY(-20px) scale(0.95);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+}
+.custom-modal.show .custom-modal-content {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.seat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    margin: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.seat-vacant {
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+}
+.seat-vacant:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.seat-filled {
+    background-color: #dc3545;
+    color: white;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+.seat-selected {
+    background-color: #007bff;
+    color: white;
+    border: 3px solid #ffc107;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+}
+.navbar-button {
+    background-color: #ffffff;
+    color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 9999px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.navbar-button:hover {
+    background-color: #007bff;
+    color: #ffffff;
+}
