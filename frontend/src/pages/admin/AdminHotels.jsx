@@ -12,6 +12,9 @@ const AdminHotels = ({ showCustomModal }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingHotel, setEditingHotel] = useState(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const hotelsPerPage = 5;
+
   // Form states
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
@@ -51,6 +54,23 @@ const AdminHotels = ({ showCustomModal }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const indexOfLastHotel = currentPage * hotelsPerPage;
+  const indexOfFirstHotel = indexOfLastHotel - hotelsPerPage;
+  const currentHotels = hotels.slice(indexOfFirstHotel, indexOfLastHotel);
+  const totalPages = Math.ceil(hotels.length / hotelsPerPage);
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
+  };
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) setCurrentPage(prev => prev - 1);
+  };
+
+  const goToPage = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   const resetForm = () => {
@@ -311,7 +331,7 @@ const AdminHotels = ({ showCustomModal }) => {
       )}
 
       {!loading && !error && hotels.length > 0 && (
-        <div className="overflow-x-auto">
+        <><div className="overflow-x-auto">
           <table className="min-w-full bg-white rounded-lg shadow-lg overflow-hidden">
             <thead className="bg-gray-100">
               <tr>
@@ -326,7 +346,7 @@ const AdminHotels = ({ showCustomModal }) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {hotels.map(hotel => (
+              {currentHotels.map(hotel => (
                 <tr key={hotel._id} className="hover:bg-gray-50">
                   <td className="py-4 px-6 whitespace-nowrap">
                     <img
@@ -334,8 +354,7 @@ const AdminHotels = ({ showCustomModal }) => {
                       src={hotel.imageUrl ? import.meta.env.VITE_BACKEND_API_URL.replace('/api', '') + hotel.imageUrl : 'https://placehold.co/100x60/CCCCCC/666666?text=Hotel'}
                       alt="Hotel"
                       className="w-16 h-10 object-cover rounded-md"
-                      onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/100x60/CCCCCC/666666?text=Hotel'; }}
-                    />
+                      onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/100x60/CCCCCC/666666?text=Hotel'; } } />
                   </td>
                   <td className="py-4 px-6 whitespace-nowrap">{hotel.name}</td>
                   <td className="py-4 px-6 whitespace-nowrap">{hotel.location}</td>
@@ -365,7 +384,19 @@ const AdminHotels = ({ showCustomModal }) => {
               ))}
             </tbody>
           </table>
-        </div>
+        </div><div className="flex justify-center items-center mt-4 space-x-2">
+            <button onClick={goToPrevPage} disabled={currentPage === 1} className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50">Previous</button>
+            {[...Array(totalPages)].map((_, idx) => (
+              <button
+                key={idx + 1}
+                onClick={() => goToPage(idx + 1)}
+                className={`px-3 py-1 rounded ${currentPage === idx + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+              >
+                {idx + 1}
+              </button>
+            ))}
+            <button onClick={goToNextPage} disabled={currentPage === totalPages} className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50">Next</button>
+          </div></>
       )}
     </section>
   );

@@ -1,3 +1,4 @@
+// App.jsx
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
@@ -14,7 +15,7 @@ import TrackTicket from './pages/TrackTicket';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminBuses from './pages/admin/AdminBuses';
 import AdminHotels from './pages/admin/AdminHotels';
-import AdminUsers from './pages/admin/AdminUsers'; // <-- NEW IMPORT
+import AdminUsers from './pages/admin/AdminUsers';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 function AppContent() {
@@ -41,7 +42,16 @@ function AppContent() {
     login(userData); // Update AuthContext
     setLoginModalOpen(false); // Close login modal
     showCustomModal('Login Success', 'You have been successfully logged in!');
-    navigate('/home'); // Redirect to home or dashboard after login
+
+    // --- CRITICAL FIX HERE ---
+    console.log('Login Success - userData received:', userData); //
+    console.log('Login Success - user role (direct access):', userData?.role); //
+
+    if (userData && userData.role === 'admin') { // Check role directly from userData
+      navigate('/admin', { replace: true }); // Redirect to admin dashboard
+    } else {
+      navigate('/home', { replace: true }); // Redirect regular user to home
+    }
   };
 
   const handleLogout = () => {
@@ -78,7 +88,7 @@ function AppContent() {
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/buses" element={<AdminBuses showCustomModal={showCustomModal} />} />
               <Route path="/admin/hotels" element={<AdminHotels showCustomModal={showCustomModal} />} />
-              <Route path="/admin/users" element={<AdminUsers showCustomModal={showCustomModal} />} /> {/* <-- NEW ROUTE */}
+              <Route path="/admin/users" element={<AdminUsers showCustomModal={showCustomModal} />} />
             </>
           )}
 

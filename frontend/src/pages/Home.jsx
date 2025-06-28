@@ -23,6 +23,10 @@ const Home = ({ showCustomModal, isAuthenticated }) => {
   const [recommendations, setRecommendations] = useState([]);
   const [noResults, setNoResults] = useState(false);
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(3); // Show 3 results per page
+
   // Helper to construct full image URL from backend relative path
   const getFullImageUrl = (relativePath) => {
     if (!relativePath) return ''; // Handle empty paths
@@ -65,6 +69,7 @@ const Home = ({ showCustomModal, isAuthenticated }) => {
     setShowDetailView(false);
     setSelectedItem(null);
     setShowResultsSection(true); // Always show results section after search attempt
+    setCurrentPage(1); // Reset to first page on new search
 
     try {
       let endpoint = '';
@@ -225,6 +230,14 @@ const Home = ({ showCustomModal, isAuthenticated }) => {
     return seats;
   };
 
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = searchResults.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(searchResults.length / itemsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   useEffect(() => {
     // Initial load, perhaps fetch some default listings or popular ones
     handleSearch(); // Call search on initial load to show something
@@ -324,7 +337,7 @@ const Home = ({ showCustomModal, isAuthenticated }) => {
           {!loading && !showDetailView && (
             <div id="results-list-view">
               <div id="results-list" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {searchResults.map((item) => (
+                {currentItems.map((item) => (
                   <div
                     key={item._id}
                     className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-blue-500 card-hover-effect flex flex-col cursor-pointer"
@@ -367,6 +380,34 @@ const Home = ({ showCustomModal, isAuthenticated }) => {
               </div>
               {noResults && (
                 <p id="no-results-message" className="text-center text-gray-600 text-lg mt-8">No results found for your search criteria. Try adjusting your filters.</p>
+              )}
+              {/* Pagination Controls */}
+              {searchResults.length > itemsPerPage && (
+                <div className="flex justify-center mt-8 space-x-2">
+                  <button
+                    onClick={() => paginate(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Previous
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <button
+                      key={i + 1}
+                      onClick={() => paginate(i + 1)}
+                      className={`px-4 py-2 rounded-lg ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => paginate(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
+                </div>
               )}
             </div>
           )}

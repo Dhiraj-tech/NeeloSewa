@@ -12,6 +12,10 @@ const AdminBuses = ({ showCustomModal }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingBus, setEditingBus] = useState(null);
 
+// Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const busesPerPage = 5;
+
   // Form states
   const [operator, setOperator] = useState('');
   const [from, setFrom] = useState('');
@@ -53,6 +57,25 @@ const AdminBuses = ({ showCustomModal }) => {
       setLoading(false);
     }
   };
+
+
+  const indexOfLastBus = currentPage * busesPerPage;
+  const indexOfFirstBus = indexOfLastBus - busesPerPage;
+  const currentBuses = buses.slice(indexOfFirstBus, indexOfLastBus);
+  const totalPages = Math.ceil(buses.length / busesPerPage);
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
+  };
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) setCurrentPage(prev => prev - 1);
+  };
+
+  const goToPage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
 
   const resetForm = () => {
     setOperator('');
@@ -335,7 +358,7 @@ const AdminBuses = ({ showCustomModal }) => {
       )}
 
       {!loading && !error && buses.length > 0 && (
-        <div className="overflow-x-auto">
+        <><div className="overflow-x-auto">
           <table className="min-w-full bg-white rounded-lg shadow-lg overflow-hidden">
             <thead className="bg-gray-100">
               <tr>
@@ -350,7 +373,7 @@ const AdminBuses = ({ showCustomModal }) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {buses.map(bus => (
+              {currentBuses.map(bus => (
                 <tr key={bus._id} className="hover:bg-gray-50">
                   <td className="py-4 px-6 whitespace-nowrap">
                     <img
@@ -358,8 +381,7 @@ const AdminBuses = ({ showCustomModal }) => {
                       src={bus.mainImageUrl ? import.meta.env.VITE_BACKEND_API_URL.replace('/api', '') + bus.mainImageUrl : 'https://placehold.co/100x60/4a90e2/FFFFFF?text=Bus'}
                       alt="Bus"
                       className="w-16 h-10 object-cover rounded-md"
-                      onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/100x60/4a90e2/FFFFFF?text=Bus'; }}
-                    />
+                      onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/100x60/4a90e2/FFFFFF?text=Bus'; } } />
                   </td>
                   <td className="py-4 px-6 whitespace-nowrap">{bus.operator}</td>
                   <td className="py-4 px-6 whitespace-nowrap">{bus.from} - {bus.to}</td>
@@ -389,7 +411,19 @@ const AdminBuses = ({ showCustomModal }) => {
               ))}
             </tbody>
           </table>
-        </div>
+        </div><div className="flex justify-center items-center mt-4 space-x-2">
+            <button onClick={goToPrevPage} disabled={currentPage === 1} className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50">Previous</button>
+            {[...Array(totalPages)].map((_, idx) => (
+              <button
+                key={idx + 1}
+                onClick={() => goToPage(idx + 1)}
+                className={`px-3 py-1 rounded ${currentPage === idx + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+              >
+                {idx + 1}
+              </button>
+            ))}
+            <button onClick={goToNextPage} disabled={currentPage === totalPages} className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50">Next</button>
+          </div></>
       )}
     </section>
   );

@@ -10,6 +10,9 @@ const AdminUsers = ({ showCustomModal }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 5;
+
   useEffect(() => {
     if (!isAuthenticated || user?.role !== 'admin') {
       showCustomModal('Access Denied', 'You need admin privileges to view this page.').then(() => {
@@ -32,6 +35,23 @@ const AdminUsers = ({ showCustomModal }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(users.length / usersPerPage);
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
+  };
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) setCurrentPage(prev => prev - 1);
+  };
+
+  const goToPage = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   const handleRoleChange = async (userId, currentRole) => {
@@ -83,7 +103,7 @@ const AdminUsers = ({ showCustomModal }) => {
       )}
 
       {!loading && !error && users.length > 0 && (
-        <div className="overflow-x-auto">
+        <><div className="overflow-x-auto">
           <table className="min-w-full bg-white rounded-lg shadow-lg overflow-hidden">
             <thead className="bg-gray-100">
               <tr>
@@ -96,7 +116,7 @@ const AdminUsers = ({ showCustomModal }) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {users.map(u => (
+              {currentUsers.map(u => (
                 <tr key={u._id} className="hover:bg-gray-50">
                   <td className="py-4 px-6 whitespace-nowrap">{u.name}</td>
                   <td className="py-4 px-6 whitespace-nowrap">{u.email}</td>
@@ -124,7 +144,19 @@ const AdminUsers = ({ showCustomModal }) => {
               ))}
             </tbody>
           </table>
-        </div>
+        </div><div className="flex justify-center items-center mt-4 space-x-2">
+            <button onClick={goToPrevPage} disabled={currentPage === 1} className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50">Previous</button>
+            {[...Array(totalPages)].map((_, idx) => (
+              <button
+                key={idx + 1}
+                onClick={() => goToPage(idx + 1)}
+                className={`px-3 py-1 rounded ${currentPage === idx + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+              >
+                {idx + 1}
+              </button>
+            ))}
+            <button onClick={goToNextPage} disabled={currentPage === totalPages} className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50">Next</button>
+          </div></>
       )}
     </section>
   );

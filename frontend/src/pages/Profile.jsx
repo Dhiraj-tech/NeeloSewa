@@ -232,7 +232,10 @@ const Profile = ({ showCustomModal }) => {
                         onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/120x120/4a90e2/FFFFFF?text=User'; }}
                     />
                     <h3 className="text-2xl font-bold text-gray-800">{user?.name}</h3>
-                    <p className="text-md text-gray-600">Balance: <span className="font-semibold text-green-600">Rs. {user?.walletBalance?.toFixed(2) || '0.00'}</span></p>
+                    {/* Conditional rendering: Only show Balance if user is NOT an admin */}
+                    {user?.role !== 'admin' && (
+                        <p className="text-md text-gray-600">Balance: <span className="font-semibold text-green-600">Rs. {user?.walletBalance?.toFixed(2) || '0.00'}</span></p>
+                    )}
                 </div>
 
                 {!isEditMode ? (
