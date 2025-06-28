@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../api/axiosInstance';
 import { useAuth } from '../context/AuthContext';
+import './Home.css'
 
 // Import the background image directly
 import heroBgImage from '../assets/img.png'; // Make sure this path is correct: src/assets/img.png
@@ -206,29 +207,113 @@ const Home = ({ showCustomModal, isAuthenticated }) => {
   };
 
   // Generate seats for bus booking
-  const renderBusSeats = (totalSeats, filledSeats) => {
-    const seats = [];
-    const occupiedSeats = new Set();
-    // Simulate some random occupied seats based on filledSeats count
-    while (occupiedSeats.size < filledSeats) {
-        occupiedSeats.add(Math.floor(Math.random() * totalSeats) + 1);
-    }
+  // const renderBusSeats = (totalSeats, filledSeats) => {
+  //   const seats = [];
+  //   const occupiedSeats = new Set();
+  //   // Simulate some random occupied seats based on filledSeats count
+  //   while (occupiedSeats.size < filledSeats) {
+  //       occupiedSeats.add(Math.floor(Math.random() * totalSeats) + 1);
+  //   }
 
-    for (let i = 1; i <= totalSeats; i++) {
-      const isFilled = occupiedSeats.has(i);
-      const isSelected = selectedBusSeat === i;
+  //   for (let i = 1; i <= totalSeats; i++) {
+  //     const isFilled = occupiedSeats.has(i);
+  //     const isSelected = selectedBusSeat === i;
+  //     seats.push(
+  //       <div
+  //         key={i}
+  //         className={`seat-icon ${isFilled ? 'seat-filled' : 'seat-vacant'} ${isSelected ? 'seat-selected' : ''} ${!isAuthenticated || isFilled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
+  //         onClick={() => (!isFilled && isAuthenticated) && setSelectedBusSeat(i)}
+  //       >
+  //         {i}
+  //       </div>
+  //     );
+  //   }
+  //   return seats;
+  // };
+
+const renderBusSeats = (totalSeats, filledSeats) => {
+  const seats = [];
+  const occupiedSeats = new Set();
+
+  // Simulate some random occupied seats based on filledSeats count
+  while (occupiedSeats.size < filledSeats) {
+    const randomSeat = Math.floor(Math.random() * totalSeats) + 1;
+    if (!occupiedSeats.has(randomSeat)) {
+      occupiedSeats.add(randomSeat);
+    }
+  }
+
+  // Driver section
+  seats.push(
+    <div key="driver" className="col-span-5 flex flex-col items-center justify-center mb-4">
+      <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center mb-2">
+        <span className="material-icons text-3xl">directions_bus</span>
+      </div>
+      <span className="text-sm font-semibold">Driver</span>
+    </div>
+  );
+
+  // Create seat labels like A1, A2, B1, A2, etc.
+  const rowLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M'];
+  let seatNumberCounter = 1; // Use a separate counter for logical seat numbering
+
+  for (let row = 0; row < Math.ceil(totalSeats / 4); row++) {
+    const rowLetter = rowLetters[row] || String.fromCharCode(65 + row);
+
+    // Left side seats (2 seats)
+    for (let i = 0; i < 2; i++) {
+      if (seatNumberCounter > totalSeats) break;
+
+      const currentSeatNumber = seatNumberCounter; // Store the current logical seat number
+      const seatLabel = `${rowLetter}${i + 1}`;
       seats.push(
         <div
-          key={i}
-          className={`seat-icon ${isFilled ? 'seat-filled' : 'seat-vacant'} ${isSelected ? 'seat-selected' : ''} ${!isAuthenticated || isFilled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
-          onClick={() => (!isFilled && isAuthenticated) && setSelectedBusSeat(i)}
+          key={`seat-${currentSeatNumber}`} // Use logical seat number for key
+          className={`seat-icon ${occupiedSeats.has(currentSeatNumber) ? 'seat-filled' : 'seat-vacant'} ${selectedBusSeat === currentSeatNumber ? 'seat-selected' : ''} ${!isAuthenticated || occupiedSeats.has(currentSeatNumber) ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
+          onClick={() => {
+            if (!occupiedSeats.has(currentSeatNumber) && isAuthenticated) {
+              // Directly set the selected seat to the clicked seat.
+              // If it's already selected, clicking it again will deselect it (toggle behavior).
+              setSelectedBusSeat(prev => prev === currentSeatNumber ? null : currentSeatNumber);
+            }
+          }}
         >
-          {i}
+          {seatLabel}
         </div>
       );
+      seatNumberCounter++;
     }
-    return seats;
-  };
+
+    // Aisle space
+    seats.push(<div key={`aisle-${row}`} className="seat-icon bg-transparent shadow-none"></div>);
+
+    // Right side seats (2 seats)
+    for (let i = 2; i < 4; i++) {
+      if (seatNumberCounter > totalSeats) break;
+
+      const currentSeatNumber = seatNumberCounter; // Store the current logical seat number
+      const seatLabel = `${rowLetter}${i + 1}`;
+      seats.push(
+        <div
+          key={`seat-${currentSeatNumber}`} // Use logical seat number for key
+          className={`seat-icon ${occupiedSeats.has(currentSeatNumber) ? 'seat-filled' : 'seat-vacant'} ${selectedBusSeat === currentSeatNumber ? 'seat-selected' : ''} ${!isAuthenticated || occupiedSeats.has(currentSeatNumber) ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
+          onClick={() => {
+            if (!occupiedSeats.has(currentSeatNumber) && isAuthenticated) {
+              // Directly set the selected seat to the clicked seat.
+              // If it's already selected, clicking it again will deselect it (toggle behavior).
+              setSelectedBusSeat(prev => prev === currentSeatNumber ? null : currentSeatNumber);
+            }
+          }}
+        >
+          {seatLabel}
+        </div>
+      );
+      seatNumberCounter++;
+    }
+  }
+
+  return seats;
+};
 
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -470,7 +555,7 @@ const Home = ({ showCustomModal, isAuthenticated }) => {
                     <span className="material-icons text-xl mr-2">person_add</span> Passenger Details
                   </h4>
                   <div className="flex flex-wrap justify-center p-4 bg-white rounded-lg shadow-md border border-gray-200 mb-4">
-                    <div id="bus-seats-layout" className="grid grid-cols-5 gap-2">
+                    <div id="bus-seats-layout" className="grid grid-cols-5 gap-2 w-full max-w-md mx-auto">
                       {renderBusSeats(selectedItem.totalSeats, selectedItem.filledSeats)}
                     </div>
                   </div>
