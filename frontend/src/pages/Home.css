@@ -49,5 +49,5 @@
   bottom: -10px;
   border: 2px dashed #999;
   border-radius: 15px;
-
+  pointer-events: none;
 }
