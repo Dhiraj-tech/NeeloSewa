@@ -177,4 +177,5 @@ body {
 .navbar-button:hover {
     background-color: #007bff;
     color: #ffffff;
+    border-color: #fff;
 }
