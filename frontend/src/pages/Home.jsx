@@ -335,7 +335,7 @@ const renderBusSeats = (totalSeats, filledSeats) => {
         className="hero-background-image text-white py-24 px-4 shadow-xl"
         style={{ backgroundImage: `url(${heroBgImage})` }} // Use imported image here
       >
-        <div className="container mx-auto text-center">
+        <div className="container mx-auto text-center text-decor">
           <h1 className="text-5xl md:text-5xl font-extrabold mb-5 text-shadow">NeeloSewa: Smart Travel, Connected Nepal.</h1>
           <p className="text-xl md:text-2xl mb-10 font-light opacity-90">Welcome to NeeloSewa! Explore smart travel options across Nepal.</p>
         </div>

@@ -36,7 +36,7 @@ const Header = ({ showLoginModal, isAuthenticated, user, onLogout }) => {
             <circle cx="6" cy="17.75" r="1" fill="#1F2937"/>
             <circle cx="18" cy="17.75" r="1" fill="#1F2937"/>
           </svg> */}
-          <img src="/icon.png" alt="NeeloSewa Logo" className="h-14 w-auto"/>
+          <img src="/icon.png" alt="NeeloSewa Logo" className="h-12 w-auto"/>
           <Link to="/home" className="text-3xl font-extrabold text-shadow" id="text-logo">NeeloSewa</Link>
         </div>
 
