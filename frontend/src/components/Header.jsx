@@ -30,12 +30,13 @@ const Header = ({ showLoginModal, isAuthenticated, user, onLogout }) => {
       <div className="container mx-auto px-4 py-3 flex items-center justify-between flex-wrap">
         <div className="flex items-center space-x-3">
           {/* Logo */}
-          <svg viewBox="0 0 24 24" fill="none" className="w-11 h-11 text-white">
+          {/* <svg viewBox="0 0 24 24" fill="none" className="w-11 h-11 text-white">
             <path fillRule="evenodd" clipRule="evenodd" d="M2.5 7.75C2.5 7.33579 2.83579 7 3.25 7H20.75C21.1642 7 21.5 7.33579 21.5 7.75V17C21.5 17.4142 21.1642 17.75 20.75 17.75H19.5V18.75C19.5 19.1642 19.1642 19.5 18.75 19.5H17.25C16.8358 19.5 16.5 19.1642 16.5 18.75V17.75H7.5V18.75C7.5 19.1642 7.16421 19.5 6.75 19.5H5.25C4.83579 19.5 4.5 19.1642 4.5 18.75V17.75H3.25C2.83579 17.75 2.5 17.4142 2.5 17V7.75ZM4.5 9V15.75H5.5V9H4.5ZM7.5 9V15.75H16.5V9H7.5ZM18.5 9V15.75H19.5V9H18.5Z" fill="currentColor"/>
             <rect x="7.5" y="9" width="9" height="6.75" rx="0.5" fill="#50b0f0"/>
             <circle cx="6" cy="17.75" r="1" fill="#1F2937"/>
             <circle cx="18" cy="17.75" r="1" fill="#1F2937"/>
-          </svg>
+          </svg> */}
+          <img src="/icon.png" alt="NeeloSewa Logo" className="h-14 w-auto"/>
           <Link to="/home" className="text-3xl font-extrabold text-shadow">NeeloSewa</Link>
         </div>
 
