@@ -9,6 +9,10 @@ import heroBgImage from '../assets/img.png'; // Make sure this path is correct: 
 // Import the SVG file as a URL
 import BusIconUrl from '../assets/bus-icon-svgrepo-com.svg'; // Make sure this path is correct: src/assets/bus-icon-svgrepo-com.svg
 
+// Define a global variable outside the component to track if the app has loaded once
+// This will persist across component mounts/unmounts
+let hasAppLoadedOnce = false;
+
 const Home = ({ showCustomModal, isAuthenticated }) => {
   const { user } = useAuth();
   const [activeSearchTab, setActiveSearchTab] = useState('bus');
@@ -17,13 +21,14 @@ const Home = ({ showCustomModal, isAuthenticated }) => {
   const [date, setDate] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false); // For search results loading
-  const [loadingApp, setLoadingApp] = useState(true); // State for overall app loading
+  // Initialize loadingApp based on the global flag
+  const [loadingApp, setLoadingApp] = useState(!hasAppLoadedOnce); // State for overall app loading
   const [showResultsSection, setShowResultsSection] = useState(false);
   const [showDetailView, setShowDetailView] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedBusSeat, setSelectedBusSeat] = useState(null);
   const [passengerName, setPassengerName] = useState('');
-  const [leadGuestName, setLeadGuestName] = useState('');
+  const [leadGuestName, setLeadGuestName] = useState(1);
   const [numGuests, setNumGuests] = useState(1);
   const [recommendations, setRecommendations] = useState([]);
   const [noResults, setNoResults] = useState(false);
@@ -288,15 +293,17 @@ const Home = ({ showCustomModal, isAuthenticated }) => {
 
   // useEffect to handle the initial loader visibility
   useEffect(() => {
-    const initialLoad = async () => {
-      // Set the loader to display for 1 seconds
-      setTimeout(() => {
-        setLoadingApp(false); 
-      }, 1000); 
-    };
+    // Only show the loader if the app hasn't loaded once before
+    if (!hasAppLoadedOnce) {
+      const initialLoadTimeout = setTimeout(() => {
+        setLoadingApp(false);
+        hasAppLoadedOnce = true; // Set the flag to true after the first load
+      }, 1000); // 1 second as before
 
-    initialLoad();
-  }, []); // The empty dependency array ensures this runs only once on component mount
+      // Cleanup the timeout if the component unmounts early
+      return () => clearTimeout(initialLoadTimeout);
+    }
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   // useEffect to trigger search on initial load and when activeSearchTab changes
   useEffect(() => {
@@ -520,7 +527,7 @@ const Home = ({ showCustomModal, isAuthenticated }) => {
                     <>
                       <p className="text-gray-700"><strong className="text-blue-700">Bus Type:</strong> {selectedItem.busType}</p>
                       <p className="text-gray-700"><strong className="text-blue-700">Departure:</strong> {selectedItem.time} on {selectedItem.date}</p>
-                      <p className="text-gray-700"><strong className="text-blue-700">Arrival:</strong> {selectedItem.arrival}</p>
+                      <p className="text-700"><strong className="text-blue-700">Arrival:</strong> {selectedItem.arrival}</p>
                       <p className="text-gray-700"><strong className="text-blue-700">Price:</strong> Rs. {selectedItem.price}</p>
                       <p className="text-gray-700"><strong className="text-blue-700">Amenities:</strong> {selectedItem.amenities.join(', ') || 'N/A'}</p>
                       <p className="text-gray-700"><strong className="text-blue-700">Seats Available:</strong> {selectedItem.totalSeats - selectedItem.filledSeats} / {selectedItem.totalSeats}</p>
