@@ -15,4 +15,3 @@ NeeloSewa is an AI-driven web app that enhances intercity bus travel in Nepal wi
 - MongoDB
 - OpenAI API
 - Vercel & Render
--
