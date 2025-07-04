@@ -51,3 +51,100 @@
   border-radius: 15px;
   pointer-events: none;
 }
+
+
+/* Loader Wrapper Styles */
+#loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0000FF; /* The blue background color from your image */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    color: white; /* Text color for "NeeloSewa is loading..." */
+    transition: opacity 0.5s ease-out; /* Smooth transition for fade-out */
+}
+
+/* Bus Container Styles */
+.loader-bus {
+    width: 150px; /* Adjust width as needed for the icon size */
+    height: 150px; /* Adjust height to match icon size */
+    position: relative;
+    animation: bounce 1s infinite alternate ease-in-out;
+    display: flex; /* Use flexbox to center the Font Awesome icon inside */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styling for the SVG icon itself */
+.bus-svg-icon {
+    width: 100%; /* Make the SVG fill its parent .loader-bus */
+    height: 100%;
+    color: white; /* Set the SVG color to white */
+}
+
+
+/* Loading Text Styles */
+.loader-text {
+    font-size: 2em;
+    margin-top: 20px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
+
+/* Animation for the "..." dots */
+@keyframes dots-animation {
+    0%, 100% { content: ''; }
+    25% { content: '.'; }
+    50% { content: '..'; }
+    75% { content: '...'; }
+}
+
+#dots {
+    display: inline-block;
+    width: 1.5em;
+    overflow: hidden;
+    vertical-align: bottom;
+}
+
+#dots::before {
+    content: '';
+    animation: dots-animation 1.5s infinite steps(4, end);
+}
+
+/* Keyframes for the bus up and down motion */
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Class added by JavaScript to fade out the loader */
+.loader-fade-out {
+    opacity: 0;
+}
+
+/* Styles for your main content (initially hidden) */
+#content { /* Renamed to .page-content for Home.jsx */
+    padding: 20px;
+    text-align: center;
+    transition: opacity 0.5s ease-in;
+    opacity: 0;
+}
+
+#content.visible { /* Renamed to .page-content.visible */
+    opacity: 1;
+}
+
+/* Added for conditional rendering in React */
+.hidden {
+    display: none;
+}
