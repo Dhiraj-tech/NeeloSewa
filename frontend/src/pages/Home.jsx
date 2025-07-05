@@ -340,18 +340,18 @@ const Home = ({ showCustomModal, isAuthenticated }) => {
 
         {/* Booking Search Section */}
         <section className="bg-white py-10 px-6 -mt-16 relative z-10 rounded-2xl shadow-2xl max-w-6xl mx-auto mb-10 border border-gray-100">
-          <div className="flex justify-center mb-8">
+          <div className="flex bg-white rounded-t-lg overflow-hidden shadow-xl mb-8 max-w-lg w-full mx-auto transform -translate-y-4">
             <button
-              className={`px-10 py-3 rounded-full font-bold text-lg shadow-lg mr-6 transition-all duration-300 hover:scale-105 btn-primary ${activeSearchTab === 'bus' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+              className={`flex-1 py-3 text-lg font-semibold transition-all duration-300 ${activeSearchTab === 'bus' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-blue-100'}`}
               onClick={() => setActiveSearchTab('bus')}
             >
-              Bus
+              <i className="material-icons align-middle mr-2">directions_bus</i> Bus
             </button>
             <button
-              className={`px-10 py-3 rounded-full font-bold text-lg shadow-lg transition-all duration-300 hover:scale-105 btn-secondary ${activeSearchTab === 'hotel' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+              className={`flex-1 py-3 text-lg font-semibold transition-all duration-300 ${activeSearchTab === 'hotel' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-blue-100'}`}
               onClick={() => setActiveSearchTab('hotel')}
             >
-              Hotels
+              <i className="material-icons align-middle mr-2">hotel</i> Hotel
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
